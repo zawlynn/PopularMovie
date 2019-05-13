@@ -17,10 +17,9 @@ public class JSONUtils {
         }
         return instance;
     }
-    public ArrayList<Movie> parseMovies(String data){
+    public ArrayList<Movie> parseMovies(JSONObject _json){
         ArrayList<Movie> movies=new ArrayList<>();
         try {
-            JSONObject _json = new JSONObject(data);
             if (_json.optJSONArray(Columns.results) != null) {
                 JSONArray array=_json.getJSONArray(Columns.results);
                 for(int i=0;i<array.length();i++) {

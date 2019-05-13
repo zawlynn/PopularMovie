@@ -34,7 +34,8 @@ public class DetailMovieActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
-        Movie movie = Objects.requireNonNull(getIntent().getExtras()).getParcelable(Constants.DATA);
+        Movie movie = Objects.requireNonNull(getIntent()
+                .getExtras()).getParcelable(Constants.DATA);
         initUI(movie);
     }
     private void initUI(Movie movie){
@@ -43,7 +44,8 @@ public class DetailMovieActivity extends AppCompatActivity {
         tv_release_date=findViewById(R.id.tv_release_date);
         tv_title=findViewById(R.id.tv_title);
         movie_detail_poster=findViewById(R.id.movie_detail_poster);
-        String url = CommonUtils.getInstance().getMoviePoster(movie.getPoster_path());
+        String url = CommonUtils.getInstance()
+                .getMoviePoster(movie.getPoster_path());
         GlideApp.with(DetailMovieActivity.this)
                 .load(url)
                 .into(movie_detail_poster);
