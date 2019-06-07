@@ -6,4 +6,5 @@
     <color name="white">#ffffff</color>
     <color name="gray">#E8E8E8</color>
     <color name="black">#0f0f0f</color>
+    <color name="tranBlack">#16000000</color>
 </resources>

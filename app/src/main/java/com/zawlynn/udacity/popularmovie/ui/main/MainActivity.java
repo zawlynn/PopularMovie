@@ -1,106 +1,73 @@
 package com.zawlynn.udacity.popularmovie.ui.main;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.StaggeredGridLayoutManager;
-import android.support.v7.widget.Toolbar;
+
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.StaggeredGridLayoutManager;
+import androidx.appcompat.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
-import com.android.volley.NetworkError;
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.VolleyLog;
-import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.StringRequest;
 import com.zawlynn.udacity.popularmovie.R;
 import com.zawlynn.udacity.popularmovie.constants.Constants;
 import com.zawlynn.udacity.popularmovie.model.Movie;
-import com.zawlynn.udacity.popularmovie.network.NetworkUtils;
+import com.zawlynn.udacity.popularmovie.data.network.NetworkUtils;
 import com.zawlynn.udacity.popularmovie.ui.detail.DetailMovieActivity;
 import com.zawlynn.udacity.popularmovie.ui.main.adapter.PopularMovieAdapter;
-import com.zawlynn.udacity.popularmovie.utils.JSONUtils;
+import com.zawlynn.udacity.popularmovie.ui.main.viewmodel.MainActivityViewmodel;
 import com.zawlynn.udacity.popularmovie.utils.OnItemClick;
 
-import org.json.JSONObject;
-
-import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 public class MainActivity extends AppCompatActivity implements OnItemClick {
+    @BindView(R.id.recMovies)
     RecyclerView recMovies;
     PopularMovieAdapter adapter;
     private static final String TAG = "MainActivity";
+    MainActivityViewmodel viewmodel;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        ButterKnife.bind(this);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        viewmodel= ViewModelProviders.of(this).get(MainActivityViewmodel.class);
+        viewmodel.get_movies().observe(this, new Observer<List<Movie>>() {
+            @Override
+            public void onChanged(List<Movie> movies) {
+                if(movies!=null){
+                    adapter.submitList(movies);
+                }
+            }
+        });
+        viewmodel.get_error().observe(this, new Observer<String>() {
+            @Override
+            public void onChanged(String s) {
+                if(s!=null){
+                    Toast.makeText(getApplicationContext(),s,Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
         initUI();
+        viewmodel.getPopularMovies(getApplicationContext());
     }
     private void initUI(){
         adapter=new PopularMovieAdapter(this);
-        StaggeredGridLayoutManager layoutManager = new StaggeredGridLayoutManager(2,StaggeredGridLayoutManager.VERTICAL);
-        recMovies=findViewById(R.id.recMovies);
+        StaggeredGridLayoutManager layoutManager = new StaggeredGridLayoutManager(2,
+                StaggeredGridLayoutManager.VERTICAL);
         recMovies.setLayoutManager(layoutManager);
         recMovies.setAdapter(adapter);
-        getPopularMovies();
+
     }
-    private void getPopularMovies() {
-        RequestQueue queue = NetworkUtils.getInstance(getApplicationContext()).getRequestQueue();
-        String uri = String.format(Constants.POPULAR + "?api_key=%1$s", Constants.API_KEY);
-        JsonObjectRequest stringRequest = new JsonObjectRequest(Request.Method.GET, uri,null, new Response.Listener<JSONObject>() {
-            @Override
-            public void onResponse(JSONObject response) {
-                VolleyLog.d(response.toString());
-                List<Movie> movies = JSONUtils.getInstance().parseMovies(response);
-                if (movies != null) {
-                    adapter.submitList(movies);
-                }
-            }
-        }, errorListener) {
-            @Override
-            public Priority getPriority() {
-                return Priority.LOW;
-            }
-        };
-        queue.add(stringRequest);
-    }
-    public void getTopRated(){
-        RequestQueue queue = NetworkUtils.getInstance(getApplicationContext()).getRequestQueue();
-        String uri = String.format(Constants.TOP_RATED + "?api_key=%1$s", Constants.API_KEY);
-        JsonObjectRequest stringRequest = new JsonObjectRequest(Request.Method.GET, uri,null, new Response.Listener<JSONObject>() {
-            @Override
-            public void onResponse(JSONObject response) {
-                ArrayList<Movie> movies = JSONUtils.getInstance().parseMovies(response);
-                if (movies != null) {
-                    adapter.submitList(movies);
-                }
-            }
-        }, errorListener) {
-            @Override
-            public Priority getPriority() {
-                return Priority.LOW;
-            }
-        };
-        queue.add(stringRequest);
-    }
-    Response.ErrorListener errorListener = new Response.ErrorListener() {
-        @Override
-        public void onErrorResponse(VolleyError error) {
-            if (error instanceof NetworkError) {
-                Toast.makeText(getApplicationContext(), getResources().getString(R.string.no_internet), Toast.LENGTH_LONG).show();
-            } else {
-                Toast.makeText(getApplicationContext(), error.toString(), Toast.LENGTH_LONG).show();
-            }
-        }
-    };
 
     @Override
     public void onClick(Movie movie) {
@@ -117,9 +84,9 @@ public class MainActivity extends AppCompatActivity implements OnItemClick {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.action_popular) {
-            getPopularMovies();
+            viewmodel.getPopularMovies(getApplicationContext());
         }else {
-            getTopRated();
+            viewmodel.getTopRated(getApplicationContext());
         }
         return super.onOptionsItemSelected(item);
     }

@@ -13,4 +13,7 @@ public class CommonUtils {
     public String getMoviePoster(String url){
         return Constants.BASE_POSTER_PATH+url;
     }
+    public String getMovieThumb(String id){
+        return Constants.YOUTUBE_THUMBNAIL_URL+id+Constants.THUMB_MQ;
+    }
 }

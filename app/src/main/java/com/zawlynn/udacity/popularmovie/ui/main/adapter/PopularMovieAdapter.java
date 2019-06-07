@@ -1,8 +1,8 @@
 package com.zawlynn.udacity.popularmovie.ui.main.adapter;
 
-import android.support.annotation.NonNull;
-import android.support.v7.recyclerview.extensions.ListAdapter;
-import android.support.v7.util.DiffUtil;
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.ListAdapter;
+import androidx.recyclerview.widget.DiffUtil;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,7 +23,8 @@ public class PopularMovieAdapter extends ListAdapter<Movie, PopuarViewHolder> {
     @NonNull
     @Override
     public PopuarViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int i) {
-        View itemLayoutView =LayoutInflater.from(parent.getContext()).inflate(R.layout.item_movie, parent, false);
+        View itemLayoutView =LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.item_movie, parent, false);
         return new PopuarViewHolder(itemLayoutView,click_event);
     }
 

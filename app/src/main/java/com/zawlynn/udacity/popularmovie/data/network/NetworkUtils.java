@@ -1,4 +1,4 @@
-package com.zawlynn.udacity.popularmovie.network;
+package com.zawlynn.udacity.popularmovie.data.network;
 
 import android.content.Context;
 import com.android.volley.RequestQueue;
