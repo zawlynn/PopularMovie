@@ -1,7 +1,9 @@
 package com.zawlynn.udacity.popularmovie.utils;
 
 import com.zawlynn.udacity.popularmovie.constants.Columns;
-import com.zawlynn.udacity.popularmovie.model.Movie;
+import com.zawlynn.udacity.popularmovie.data.database.MovieDatabase;
+import com.zawlynn.udacity.popularmovie.data.database.dao.MovieDao;
+import com.zawlynn.udacity.popularmovie.data.database.entity.Movie;
 
 import org.json.JSONArray;
 import org.json.JSONException;

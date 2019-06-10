@@ -1,10 +1,8 @@
 package com.zawlynn.udacity.popularmovie.ui.detail.viewmodel;
 
-import android.annotation.SuppressLint;
 import android.app.Application;
 import android.content.Context;
 import android.os.AsyncTask;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
@@ -15,7 +13,6 @@ import com.android.volley.NetworkError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -24,7 +21,7 @@ import com.zawlynn.udacity.popularmovie.constants.Columns;
 import com.zawlynn.udacity.popularmovie.constants.Constants;
 import com.zawlynn.udacity.popularmovie.data.database.MovieDatabase;
 import com.zawlynn.udacity.popularmovie.data.database.dao.MovieDao;
-import com.zawlynn.udacity.popularmovie.data.database.entity.FavouriteMovie;
+import com.zawlynn.udacity.popularmovie.data.database.entity.Movie;
 import com.zawlynn.udacity.popularmovie.data.network.NetworkUtils;
 import com.zawlynn.udacity.popularmovie.model.Review;
 import com.zawlynn.udacity.popularmovie.model.Trailer;
@@ -48,11 +45,11 @@ public class ActivityDetailViewmodel extends AndroidViewModel {
         movieDao = MovieDatabase.getInstance(application).movieDao();
     }
 
-    public void setFavourte(FavouriteMovie movie) {
+    public void setFavourte(Movie movie) {
         new PopulateDbAsync(movieDao).execute(movie);
     }
 
-    public LiveData<FavouriteMovie> checkFavourite(long id) {
+    public LiveData<Movie> checkFavourite(long id) {
         return movieDao.selectFavouriteMovieById(id);
     }
 
@@ -125,16 +122,19 @@ public class ActivityDetailViewmodel extends AndroidViewModel {
         NetworkUtils.getInstance(getApplication()).getRequestQueue().cancelAll(this);
     }
 
-    private static class PopulateDbAsync extends AsyncTask<FavouriteMovie, Void, Void> {
+    private static class PopulateDbAsync extends AsyncTask<Movie, Void, Void> {
         private final MovieDao movieDao;
         PopulateDbAsync(MovieDao movieDao) {
             this.movieDao = movieDao;
-
         }
 
         @Override
-        protected Void doInBackground(FavouriteMovie... favouriteMovies) {
-            movieDao.insertFavourite(favouriteMovies[0]);
+        protected Void doInBackground(Movie... favouriteMovies) {
+            if(favouriteMovies[0].isFavourite()){
+                movieDao.insertFavourite(favouriteMovies[0]);
+            }else {
+                movieDao.deleteFavourite(favouriteMovies[0].getId());
+            }
             return null;
         }
     }

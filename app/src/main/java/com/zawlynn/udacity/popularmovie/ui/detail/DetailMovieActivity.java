@@ -18,8 +18,7 @@ import android.widget.TextView;
 
 import com.zawlynn.udacity.popularmovie.R;
 import com.zawlynn.udacity.popularmovie.constants.Constants;
-import com.zawlynn.udacity.popularmovie.data.database.entity.FavouriteMovie;
-import com.zawlynn.udacity.popularmovie.model.Movie;
+import com.zawlynn.udacity.popularmovie.data.database.entity.Movie;
 import com.zawlynn.udacity.popularmovie.model.Trailer;
 import com.zawlynn.udacity.popularmovie.ui.detail.adapter.MovieReviewAdapter;
 import com.zawlynn.udacity.popularmovie.ui.detail.adapter.MovieTrailerAdapter;
@@ -54,8 +53,9 @@ public class DetailMovieActivity extends AppCompatActivity implements OnTrailerC
     ActivityDetailViewmodel viewmodel;
     MovieTrailerAdapter adapter;
     MovieReviewAdapter review_adapter;
-    boolean isFavourite=false;
+    boolean isFavourite = false;
     Movie movie;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -73,7 +73,6 @@ public class DetailMovieActivity extends AppCompatActivity implements OnTrailerC
                 adapter.submitList(trailers);
             }
         });
-
         viewmodel.get_reviews().observe(this, reviews -> {
             if (reviews != null) {
                 review_adapter.submitList(reviews);
@@ -81,17 +80,6 @@ public class DetailMovieActivity extends AppCompatActivity implements OnTrailerC
         });
 
         initUI(movie);
-        viewmodel.checkFavourite(movie.getId()).observe(this ,item -> {
-            if(item!=null){
-                if(item.isFavourite()){
-                    img_fav.setImageDrawable(getResources().getDrawable(R.mipmap.ic_favourite));
-                    isFavourite=true;
-                }else {
-                    img_fav.setImageDrawable(getResources().getDrawable(R.mipmap.ic_unfavourite));
-                    isFavourite=false;
-                }
-            }
-        });
         viewmodel.getVideoLists(getApplicationContext(), movie.getId());
         viewmodel.getReviewLists(getApplicationContext(), movie.getId());
         img_fav.setOnClickListener(this);
@@ -104,7 +92,7 @@ public class DetailMovieActivity extends AppCompatActivity implements OnTrailerC
                 .load(url)
                 .into(movie_detail_poster);
         adapter = new MovieTrailerAdapter(this);
-        review_adapter=new MovieReviewAdapter();
+        review_adapter = new MovieReviewAdapter();
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(getApplicationContext(),
                 LinearLayoutManager.HORIZONTAL, false);
@@ -119,6 +107,14 @@ public class DetailMovieActivity extends AppCompatActivity implements OnTrailerC
         tv_overview.setText(movie.getOverview());
         tv_rating.setText(movie.getVote_average() + "/10");
         tv_title.setText(movie.getTitle());
+
+        if (movie.isFavourite()) {
+            img_fav.setImageDrawable(getResources().getDrawable(R.mipmap.ic_favourite));
+            isFavourite = true;
+        } else {
+            img_fav.setImageDrawable(getResources().getDrawable(R.mipmap.ic_unfavourite));
+            isFavourite = false;
+        }
     }
 
     @Override
@@ -135,16 +131,13 @@ public class DetailMovieActivity extends AppCompatActivity implements OnTrailerC
 
     @Override
     public void onClick(View v) {
-        FavouriteMovie favouriteMovie=new FavouriteMovie();
-        favouriteMovie.setId(movie.getId());
-        if(isFavourite){
+        if (movie.isFavourite()) {
             img_fav.setImageDrawable(getResources().getDrawable(R.mipmap.ic_unfavourite));
-            isFavourite=false;
-        }else {
+            movie.setFavourite(false);
+        } else {
             img_fav.setImageDrawable(getResources().getDrawable(R.mipmap.ic_favourite));
-            isFavourite=true;
+           movie.setFavourite(true);
         }
-        favouriteMovie.setFavourite(isFavourite);
-        viewmodel.setFavourte(favouriteMovie);
+        viewmodel.setFavourte(movie);
     }
 }

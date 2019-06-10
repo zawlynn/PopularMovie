@@ -2,16 +2,15 @@ package com.zawlynn.udacity.popularmovie.data.database;
 
 
 import android.app.Application;
-import android.content.Context;
 
 import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
 
 import com.zawlynn.udacity.popularmovie.data.database.dao.MovieDao;
-import com.zawlynn.udacity.popularmovie.data.database.entity.FavouriteMovie;
+import com.zawlynn.udacity.popularmovie.data.database.entity.Movie;
 
-@Database(entities = {FavouriteMovie.class}, version = 1)
+@Database(entities = {Movie.class}, version = 2)
 public abstract class MovieDatabase extends RoomDatabase {
     public abstract MovieDao movieDao();
 

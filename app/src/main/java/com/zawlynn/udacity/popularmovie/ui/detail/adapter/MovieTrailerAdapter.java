@@ -8,11 +8,9 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.ListAdapter;
 
 import com.zawlynn.udacity.popularmovie.R;
-import com.zawlynn.udacity.popularmovie.model.Movie;
 import com.zawlynn.udacity.popularmovie.model.Trailer;
 import com.zawlynn.udacity.popularmovie.ui.detail.viewholder.TrailerViewHolder;
 import com.zawlynn.udacity.popularmovie.ui.detail.diff.TrailerItemCallback;
-import com.zawlynn.udacity.popularmovie.utils.OnItemClick;
 import com.zawlynn.udacity.popularmovie.utils.OnTrailerClick;
 
 public class MovieTrailerAdapter extends ListAdapter<Trailer, TrailerViewHolder> {

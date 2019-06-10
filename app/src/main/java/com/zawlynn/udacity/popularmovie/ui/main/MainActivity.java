@@ -4,7 +4,6 @@ import android.content.Intent;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
@@ -15,13 +14,13 @@ import android.widget.Toast;
 
 import com.zawlynn.udacity.popularmovie.R;
 import com.zawlynn.udacity.popularmovie.constants.Constants;
-import com.zawlynn.udacity.popularmovie.model.Movie;
-import com.zawlynn.udacity.popularmovie.data.network.NetworkUtils;
+import com.zawlynn.udacity.popularmovie.data.database.entity.Movie;
 import com.zawlynn.udacity.popularmovie.ui.detail.DetailMovieActivity;
 import com.zawlynn.udacity.popularmovie.ui.main.adapter.PopularMovieAdapter;
 import com.zawlynn.udacity.popularmovie.ui.main.viewmodel.MainActivityViewmodel;
 import com.zawlynn.udacity.popularmovie.utils.OnItemClick;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -33,6 +32,7 @@ public class MainActivity extends AppCompatActivity implements OnItemClick {
     PopularMovieAdapter adapter;
     private static final String TAG = "MainActivity";
     MainActivityViewmodel viewmodel;
+    List<Movie> fav_movies=new ArrayList<>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,25 +40,26 @@ public class MainActivity extends AppCompatActivity implements OnItemClick {
         ButterKnife.bind(this);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        viewmodel= ViewModelProviders.of(this).get(MainActivityViewmodel.class);
-        viewmodel.get_movies().observe(this, new Observer<List<Movie>>() {
-            @Override
-            public void onChanged(List<Movie> movies) {
-                if(movies!=null){
-                    adapter.submitList(movies);
-                }
-            }
-        });
-        viewmodel.get_error().observe(this, new Observer<String>() {
-            @Override
-            public void onChanged(String s) {
-                if(s!=null){
-                    Toast.makeText(getApplicationContext(),s,Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
         initUI();
-        viewmodel.getPopularMovies(getApplicationContext());
+        viewmodel= ViewModelProviders.of(this).get(MainActivityViewmodel.class);
+        viewmodel.getFavMove().observe(this,movies -> {
+            if(movies!=null){
+                fav_movies.clear();
+                fav_movies.addAll(movies);
+            }
+        });
+        viewmodel.get_movies().observe(this, movies -> {
+            if(movies!=null){
+                adapter.submitList(movies);
+                adapter.notifyDataSetChanged();
+            }
+        });
+        viewmodel.get_error().observe(this, s -> {
+            if(s!=null){
+                Toast.makeText(getApplicationContext(),s,Toast.LENGTH_SHORT).show();
+            }
+        });
+
     }
     private void initUI(){
         adapter=new PopularMovieAdapter(this);
@@ -72,6 +73,11 @@ public class MainActivity extends AppCompatActivity implements OnItemClick {
     @Override
     public void onClick(Movie movie) {
         Intent i =new Intent(MainActivity.this, DetailMovieActivity.class);
+        if(fav_movies.contains(movie)){
+            movie.setFavourite(true);
+        }else {
+            movie.setFavourite(false);
+        }
         i.putExtra(Constants.DATA,movie);
         startActivity(i);
     }
@@ -85,8 +91,10 @@ public class MainActivity extends AppCompatActivity implements OnItemClick {
         int id = item.getItemId();
         if (id == R.id.action_popular) {
             viewmodel.getPopularMovies(getApplicationContext());
-        }else {
+        }else if (id==R.id.top_rated){
             viewmodel.getTopRated(getApplicationContext());
+        }else{
+            viewmodel.sortByFav(fav_movies);
         }
         return super.onOptionsItemSelected(item);
     }

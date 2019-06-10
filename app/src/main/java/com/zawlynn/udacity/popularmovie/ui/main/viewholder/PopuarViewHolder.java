@@ -16,7 +16,7 @@ import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.zawlynn.udacity.popularmovie.R;
-import com.zawlynn.udacity.popularmovie.model.Movie;
+import com.zawlynn.udacity.popularmovie.data.database.entity.Movie;
 import com.zawlynn.udacity.popularmovie.utils.CommonUtils;
 import com.zawlynn.udacity.popularmovie.utils.GlideApp;
 import com.zawlynn.udacity.popularmovie.utils.OnItemClick;

@@ -1,23 +1,53 @@
-package com.zawlynn.udacity.popularmovie.model;
+package com.zawlynn.udacity.popularmovie.data.database.entity;
 
 
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import androidx.room.ColumnInfo;
+import androidx.room.Entity;
+import androidx.room.Ignore;
+import androidx.room.PrimaryKey;
+
+@Entity(tableName = "tbl_movie")
 public class Movie implements Parcelable {
+    @ColumnInfo(name = "id")
+    @PrimaryKey
     private long id;
+    @ColumnInfo(name = "vote_count")
     private int vote_count;
+    @ColumnInfo(name = "video")
     private boolean video;
+    @ColumnInfo(name = "vote_average")
     private double vote_average;
+    @ColumnInfo(name = "title")
     private String title;
+    @ColumnInfo(name = "popularity")
     private double popularity;
+    @ColumnInfo(name = "poster_path")
     private String poster_path;
+    @ColumnInfo(name = "original_language")
     private String original_language;
+    @ColumnInfo(name = "original_title")
     private String original_title;
+    @ColumnInfo(name = "backdrop_path")
     private String backdrop_path;
+    @ColumnInfo(name = "adult")
     private boolean adult;
+    @ColumnInfo(name = "overview")
     private String overview;
+    @ColumnInfo(name = "release_date")
     private String release_date;
+    @Ignore
+    private boolean isFavourite;
+    public boolean isFavourite() {
+        return isFavourite;
+    }
+
+    public void setFavourite(boolean favourite) {
+        isFavourite = favourite;
+    }
+
 
     public long getId() {
         return id;
@@ -130,23 +160,26 @@ public class Movie implements Parcelable {
         Movie user = (Movie) obj;
         return user.getId() == this.getId() && user.getTitle().equals(this.getTitle());
     }
-    public Movie(){
+
+    public Movie() {
         super();
     }
-    private Movie(Parcel in){
-        id=in.readLong();
-        vote_count=in.readInt();
-        video=in.readByte() != 0;
-        vote_average=in.readDouble();
-        title=in.readString();
-        popularity=in.readDouble();
-        poster_path=in.readString();
-        original_language=in.readString();
-        original_title=in.readString();
-        backdrop_path=in.readString();
-        adult=in.readByte() != 0;
-        overview=in.readString();
-        release_date=in.readString();
+
+    private Movie(Parcel in) {
+        id = in.readLong();
+        vote_count = in.readInt();
+        video = in.readByte() != 0;
+        vote_average = in.readDouble();
+        title = in.readString();
+        popularity = in.readDouble();
+        poster_path = in.readString();
+        original_language = in.readString();
+        original_title = in.readString();
+        backdrop_path = in.readString();
+        adult = in.readByte() != 0;
+        overview = in.readString();
+        release_date = in.readString();
+        isFavourite = in.readByte() != 0;
     }
 
     @Override
@@ -170,6 +203,7 @@ public class Movie implements Parcelable {
         parcel.writeByte((byte) (adult ? 1 : 0));
         parcel.writeString(overview);
         parcel.writeString(release_date);
+        parcel.writeByte((byte) (isFavourite ? 1 : 0));
     }
 
     public final static Parcelable.Creator<Movie> CREATOR = new Parcelable.Creator<Movie>() {

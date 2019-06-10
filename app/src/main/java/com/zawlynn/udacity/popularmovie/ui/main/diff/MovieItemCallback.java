@@ -3,7 +3,7 @@ package com.zawlynn.udacity.popularmovie.ui.main.diff;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.DiffUtil;
 
-import com.zawlynn.udacity.popularmovie.model.Movie;
+import com.zawlynn.udacity.popularmovie.data.database.entity.Movie;
 
 
 public class MovieItemCallback extends  DiffUtil.ItemCallback<Movie>{

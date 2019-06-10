@@ -2,13 +2,13 @@ package com.zawlynn.udacity.popularmovie.ui.main.adapter;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.ListAdapter;
-import androidx.recyclerview.widget.DiffUtil;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.zawlynn.udacity.popularmovie.R;
-import com.zawlynn.udacity.popularmovie.model.Movie;
+import com.zawlynn.udacity.popularmovie.data.database.entity.Movie;
 import com.zawlynn.udacity.popularmovie.ui.main.diff.MovieItemCallback;
 import com.zawlynn.udacity.popularmovie.ui.main.viewholder.PopuarViewHolder;
 import com.zawlynn.udacity.popularmovie.utils.OnItemClick;

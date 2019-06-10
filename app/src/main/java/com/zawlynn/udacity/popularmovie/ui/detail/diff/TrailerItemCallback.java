@@ -3,7 +3,6 @@ package com.zawlynn.udacity.popularmovie.ui.detail.diff;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.DiffUtil;
 
-import com.zawlynn.udacity.popularmovie.model.Movie;
 import com.zawlynn.udacity.popularmovie.model.Trailer;
 
 
