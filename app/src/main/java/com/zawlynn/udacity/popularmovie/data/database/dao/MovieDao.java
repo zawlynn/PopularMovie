@@ -19,8 +19,6 @@ public interface MovieDao {
     @Transaction
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertFavourite(Movie entity);
-    @Query("SELECT * FROM tbl_movie  WHERE id = :id")
-    LiveData<Movie> selectFavouriteMovieById(long id);
     @Query("DELETE FROM tbl_movie WHERE id==:id")
     void deleteFavourite(long id);
     @Query("SELECT * FROM tbl_movie")

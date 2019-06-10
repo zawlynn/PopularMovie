@@ -49,10 +49,6 @@ public class ActivityDetailViewmodel extends AndroidViewModel {
         new PopulateDbAsync(movieDao).execute(movie);
     }
 
-    public LiveData<Movie> checkFavourite(long id) {
-        return movieDao.selectFavouriteMovieById(id);
-    }
-
     public void getVideoLists(Context context, long id) {
         RequestQueue queue = NetworkUtils.getInstance(context).getRequestQueue();
         String url = String.format(Constants.VIDEO_TEASER + "?api_key=%s", id, Constants.API_KEY);

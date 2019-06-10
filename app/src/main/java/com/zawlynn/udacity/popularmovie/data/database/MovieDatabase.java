@@ -10,7 +10,7 @@ import androidx.room.RoomDatabase;
 import com.zawlynn.udacity.popularmovie.data.database.dao.MovieDao;
 import com.zawlynn.udacity.popularmovie.data.database.entity.Movie;
 
-@Database(entities = {Movie.class}, version = 2)
+@Database(entities = {Movie.class}, version = 2,exportSchema = false)
 public abstract class MovieDatabase extends RoomDatabase {
     public abstract MovieDao movieDao();
 

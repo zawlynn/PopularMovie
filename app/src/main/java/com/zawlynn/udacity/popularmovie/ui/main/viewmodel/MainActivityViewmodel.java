@@ -97,12 +97,7 @@ public class MainActivityViewmodel extends AndroidViewModel {
                     temp.setFavourite(false);
                 }
             }
-            Collections.sort(movies, new Comparator<Movie>() {
-                @Override
-                public int compare(Movie abc1, Movie abc2) {
-                    return Boolean.compare(abc2.isFavourite(),abc1.isFavourite());
-                }
-            });
+            Collections.sort(movies, (movie1, movie2) -> Boolean.compare(movie1.isFavourite(),movie2.isFavourite()));
             _movies.postValue(movies);
         }
     }
